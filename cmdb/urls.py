@@ -1,8 +1,7 @@
-from django.conf.urls import url
+from rest_framework.routers import DefaultRouter
 
 from . import views
 
-urlpatterns = [
-    url(r'^$', views.index, name='index'),
-    url(r'^api/token/$', obtain_auth_token, name='api-token'),
-]
+router = DefaultRouter()
+router.register(r'server',views.ServerIPViewSet)
+router.register(r'serverip',views.ServerIPViewSet)
