@@ -1,4 +1,6 @@
+from django.conf import settings
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 class Server(models.Model):
     SRV_TYPES = (
@@ -21,7 +23,7 @@ class Server(models.Model):
         return self.hostname
 
 class ServerIP(models.Model):
-    server_id = models.ForeignKey(Server, on_delete=models.CASCADE)
+    server_id = models.ForeignKey(Server,blank=True, null=True)
     ip = models.GenericIPAddressField(protocol='IPv4')
     def __str__(self):
         return self.ip
@@ -33,8 +35,8 @@ class HRBL_App(models.Model):
         return self.name
 
 class Server_App(models.Model):
-    server_id = models.ForeignKey(Server)
-    app_id = models.ForeignKey(HRBL_App)
+    server_id = models.ForeignKey(Server,blank=True, null=True)
+    app_id = models.ForeignKey(HRBL_App,blank=True, null=True)
     notes = models.CharField(max_length=255)
     def __str__(self):
         return "{}-{}".format(self.server_id.hostname,slf.app_id.name)

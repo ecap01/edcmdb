@@ -1,43 +1,54 @@
 from django.contrib.auth import get_user_model
+from django.utils.translation import ugettext_lazy as _
+
 from rest_framework import serializers
-from rest_framework import reverse
+from rest_framework.reverse import reverse
+
 from .models import Server, ServerIP
 
 User = get_user_model()
 
 class ServerSerializer(serializers.ModelSerializer):
-    links = serializers.SerializerMethodField('get_links')
+    links = serializers.SerializerMethodField()
 
     class Meta:
         model = Server
         fields = ('id', 'hostname', 'srv_type','tier', 'links', )
 
     def get_links(self,obj):
-        request = self.context['server-detail']
+        request = self.context['request']
         return {
-            'self': reverse('hostname',
-                            kwargs={'pk':obj.pk},request=request),
+            'self': reverse('server-detail',
+                            kwargs={'pk': obj.pk},request=request),
+            'ips': reverse('serverip-list',
+                           request=request) + '?server={}'.format(obj.pk),
         }
 
 class ServerIPSerializer(serializers.ModelSerializer):
-    links = serializers.SerializerMethodField('get_links')
-    hostname = serializers.SlugRelatedField(
-        slug_field = Server.HOSTNAME_FIELD, required=False, allow_null=True,
-        queryset=Server.objects.all())
+    
+    #hostname = serializers.SlugRelatedField(
+    #    slug_field = Server.hostname, required=False,allow_null=True,
+    #    queryset=Server.objects.all())
+    links = serializers.SerializerMethodField()
 
     class Meta:
         model = ServerIP
-        fields = ('id','hostname','ip','links',)
+        fields = ('id','server_id','ip','links',)
         
-    def get_links(self,obj):
+    def get_links(self, obj):
         request = self.context['request']
-        return {
-            'self': reverse('serverip-detail',
-                            kwargs={'pk':obj.pk},request=request),
+        links = {
+            'self': reverse('serverip-detail',kwargs={'pk': obj.pk}, request=request),
+            'server': None
         }
+        if obj.server_id:
+            links['server'] = reverse('server-detail', kwargs={'pk': obj.server_id.pk}, request=request)
+            
+        return links
+
 
 class UserSerializer(serializers.ModelSerializer):
-    links = serializers.SerializerMethodField('get_links')
+    links = serializers.SerializerMethodField()
     full_name = serializers.CharField(source='get_full_name', read_only=True)
 
     class Meta:
@@ -48,5 +59,5 @@ class UserSerializer(serializers.ModelSerializer):
         request = self.context['request']
         return {
             'self': reverse('user-detail',
-                            kwargs={User.USERNAME_FIELD:username},request=request),
+                            kwargs={User.USERNAME_FIELD: username},request=request),
         }
