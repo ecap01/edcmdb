@@ -4,8 +4,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import authentication, permissions, viewsets
 
-from .models import Server, ServerIP
-from .serializers import ServerSerializer, ServerIPSerializer, UserSerializer  
+from .models import Server, ServerIP, HRBL_App, Server_App
+from .serializers import ServerSerializer, ServerIPSerializer, HRBL_AppSerializer, Server_AppSerializer, UserSerializer  
 
 User = get_user_model() 
 
@@ -32,6 +32,16 @@ class ServerIPViewSet(DefaultsMixin, viewsets.ModelViewSet):
     ''' API endpoint for listing and creating Server IPs  '''
     queryset = ServerIP.objects.all()
     serializer_class = ServerIPSerializer
+
+class HRBL_AppViewSet(DefaultsMixin, viewsets.ModelViewSet):
+    ''' API endpoint for listing and creating Herbalife Apps '''
+    queryset = HRBL_App.objects.all()
+    serializer_class = HRBL_AppSerializer
+
+class Server_AppViewSet(DefaultsMixin, viewsets.ModelViewSet):
+    ''' API endpoint for listing and creating Server Apps  '''
+    queryset = Server_App.objects.all()
+    serializer_class = Server_AppSerializer
 
 class UserViewSet(DefaultsMixin, viewsets.ReadOnlyModelViewSet):
     ''' API endpoint for listing Users '''
