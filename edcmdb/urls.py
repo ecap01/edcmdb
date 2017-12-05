@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import include,url
+from django.views.generic import TemplateView
 from django.contrib import admin
 from rest_framework.authtoken.views import obtain_auth_token
 from cmdb.urls import router
@@ -22,5 +23,6 @@ urlpatterns = [
     #url(r'cmdb/', include('cmdb.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^api/token/$', obtain_auth_token, name='api-token'),
-    url(r'^api/', include(router.urls))
+    url(r'^api/', include(router.urls)),
+    url(r'^$', TemplateView.as_view(template_name='cmdb/index.html')),
 ]
