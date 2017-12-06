@@ -1,5 +1,18 @@
 (function ($, Backbone, _, app) {
 
+	var Test1View = Backbone.View.extend({
+		el: '#container',
+		template: _.template("<h3>Hello <%= who %></h3>"),
+		initialize: function () {
+			this.render();
+		},
+		render: function () {
+			this.$el.html(this.template({who: 'Capi!!'}));
+		}
+	});
+	
+	var test = new Test1View();
+
 	var TemplateView = Backbone.View.extend({
 		templateName: '',
 		initialize: function () {
@@ -61,7 +74,20 @@
 	});
 
 	var HomepageView = TemplateView.extend({
-		templateName: '#home-template'
+		templateName: '#home-template',
+		initialize: function (options) {
+			var self = this;
+			TemplateView.prototype.initialize.apply(this, arguments);
+			app.collections.ready.done(function () {
+				app.servers.fetch({
+					data: {},
+					success: $.proxy(self.render, self)
+				});
+			});
+		},
+		getContext: function () {
+			return {servers: app.servers || null}
+		}
 	});
 
 	var LoginView = FormView.extend({

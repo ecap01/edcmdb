@@ -32,9 +32,25 @@
         </nav>
         <% } %>
     </script>
+    <script type="text/html" id="home-template">
+      <h2>Your Servers</h2>
+      <button class="add" type="submit">Add Server</button>
+      <% if (servers !== null) { %>
+	  <div class="servers">
+          <% _.each(servers.models, function (server) { %>
+	    <a href=#server/><%- servers.get('id') %>" class="server">
+              <%- server.get('hostname')  %>
+	    </a>
+	  <% }); %>
+	  </div>
+      <% } else { %>
+	  <h3 class="loading">Loading...</h3>
+      <% } %>
+    </script>
   </head>
   <body>
     <div id="content"></div>
+    <div id="container"></div>
     <script src="{% static 'cmdb/vendor/jquery.js' %}"></script>
     <script src="{% static 'cmdb/vendor/underscore.js' %}"></script>
     <script src="{% static 'cmdb/vendor/backbone.js' %}"></script>

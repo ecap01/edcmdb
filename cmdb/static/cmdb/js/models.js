@@ -75,5 +75,50 @@
 	});
 
 	app.session = new Session();
+	
+	var BaseModel = Backbone.Model.extend({
+		url: function () {
+			var links = this.get('links'),
+				url = links && links.self;
+			if (!url) {
+				url = Backbone.Model.prototype.url.call(this);
+			}
+			return url;
+		}
+	});
+	
+	app.models.Server = BaseModel.extend({});
+	app.models.ServerIP = BaseModel.extend({});
+	app.models.User = BaseModel.extend({
+		idAttributemodel: 'username'
+	});
+	
+	var BaseCollection = Backbone.Collection.extend({
+		parse: function (response) {
+			this._next = response.next;
+			this._previous = response.previous;
+			this._count = response.count;
+			return response.results || [];
+		}
+	});
+	
+	app.collections.ready =  $.getJSON(app.apiRoot);
+	app.collections.ready.done(function (data) {
+		app.collections.Servers = BaseCollection.extend({
+			model: app.models.Server,
+			url: data.servers
+		});
+		app.servers = new app.collections.Servers();
+		app.collections.ServerIPs = BaseCollection.extend({
+			model: app.models.ServerIP,
+			url: data.serverips
+		});
+		app.serverips = new app.collections.ServerIPs();
+		app.collections.Users = BaseCollection.extend({
+			model: app.models.User,
+			url: data.users
+		});
+		app.users = new app.collections.Users();
+	});
 
 })(jQuery, Backbone, _, app);

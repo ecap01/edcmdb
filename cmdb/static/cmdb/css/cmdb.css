@@ -99,3 +99,19 @@ header nav a:hover {
     display: block;
 }
 
+/* Servers Listing
+==================== */
+.servers {
+    margin-top: 25px;
+}
+.servers a.server {
+    padding: 25px;
+    float: left;
+    text-align: center;
+    background: #000;
+    margin: 8px 8px 0 0;
+    color: #FFF;
+}
+.servers a.server span {
+    font-size: 10px;
+}
