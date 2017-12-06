@@ -3,7 +3,7 @@
 	// CSRF helper functions taken directly from Django docs
 	function csrfSafeMethod(method) {
 		// these HTTP methods do not require CSRF protection
-		return (/^(GET|HEAD|OPTIONS|TRACE)$i.test(method));
+		return (/^(GET|HEAD|OPTIONS|TRACE)$/i.test(method));
 	}
 
 	function getCookie(name) {
@@ -29,8 +29,8 @@
 		if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
 			// Send the token to same-origin, relative URLs only.
 			// Send the token only if the method warrants CSRF protection
-			// Using the CRSToken value acquired earlier
-			crsftoken = getCookie('csrftoken');
+			// Using the CSRFToken value acquired earlier
+			csrftoken = getCookie('csrftoken');
 			xhr.setRequestHeader('X-CSRFToken', csrftoken);
 		}
 	});
@@ -62,16 +62,16 @@
 			this.save(null);
 		},
 		authenticated: function () {
-			return this.get('token') != null;
+			return this.get('token') !== null;
 		},
 		_setupAuth: function (settings, originalOptions, xhr) {
 			if (this.authenticated()) {
 				xhr.setRequestHeader(
 						'Authorization',
-						'Token' + this.get('token')
+						'Token ' + this.get('token')
 			  );
 			}
-		},
+		}
 	});
 
 	app.session = new Session();

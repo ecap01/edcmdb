@@ -7,6 +7,8 @@
     <title>CMDB Project</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'cmdb/vendor/normalize.css' %}">
+    <link rel="stylesheet" href="{% static 'cmdb/css/cmdb.css' %}">
     <script type="text/html" id="home-template">
       <h1>Welcome to the CMDB Project!</h1>
     </script>
@@ -21,6 +23,15 @@
 	<button type="submit">Login</button>
       </form>
     </script>
+    <script type="text/html" id="header-template">
+      <span class="title">CMDB Example</span>
+        <% if (authenticated) { %>
+        <nav>
+	  <a href="/" class="button">Your entry on CMDB</a>
+	  <a href="#" class="logon button">Logout</a>
+        </nav>
+        <% } %>
+    </script>
   </head>
   <body>
     <div id="content"></div>
@@ -32,8 +43,8 @@
        "models": {},
        "collections": {},
        "views": {},
-       "router": null
-       "apiRoot": "{% url 'api-root' %}"
+       "router": null,
+       "apiRoot": "{% url 'api-root' %}",
        "apiLogin": "{% url 'api-token' %}"
       }
     </script>
